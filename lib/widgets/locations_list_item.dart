@@ -9,10 +9,10 @@ class LocationListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        onTap: (){},
+        onTap: () {},
         child: Container(
           alignment: AlignmentDirectional.centerStart,
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: Theme.of(context).cardColor,
             border: const Border(
@@ -26,31 +26,15 @@ class LocationListItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    location.name!,
-                    textAlign: TextAlign.start,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4!
-                        .copyWith(color: Colors.white),
-                  ),
-                  PopupMenuButton(
-                    icon: const Icon(Icons.more_vert),
-                    itemBuilder: (_) => [
-                      const PopupMenuItem(
-                        child: Text('Set as current location'),
-                        value: 'current',
-                      ),
-                      const PopupMenuItem(
-                        child: Text('Add to locations'),
-                        value: 'add',
-                      ),
-                    ],
-                  ),
-                ],
+              FittedBox(
+                child: Text(
+                  location.name!,
+                  textAlign: TextAlign.start,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline4!
+                      .copyWith(color: Colors.white),
+                ),
               ),
               const SizedBox(
                 height: 10,
