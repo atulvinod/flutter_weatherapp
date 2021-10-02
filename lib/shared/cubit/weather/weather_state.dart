@@ -16,8 +16,8 @@ class WeatherLoaded extends WeatherState {
   final WeatherModel currentWeather;
   final List<WeatherModel> hourlyForcast;
   final List<WeatherModel> weeklyForecast;
-
-  WeatherLoaded(this.currentWeather, this.hourlyForcast, this.weeklyForecast);
+  final Units units;
+  WeatherLoaded(this.currentWeather, this.hourlyForcast, this.weeklyForecast, this.units);
   @override
-  List<Object?> get props => [currentWeather, hourlyForcast, weeklyForecast];
+  List<Object?> get props => [currentWeather, hourlyForcast, weeklyForecast, this.units];
 }

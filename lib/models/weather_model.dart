@@ -1,3 +1,4 @@
+import 'package:weatherapp/models/enums.dart';
 import 'package:weatherapp/models/location_model.dart';
 
 class WeatherModel {
@@ -12,8 +13,12 @@ class WeatherModel {
   final int? sunrise;
   final int? sunset;
   final String? weatherDescription;
+  final int? currentTime;
+  final Units? units;
   WeatherModel(
       {
+        this.units,
+        this.currentTime,
         this.weatherDescription,
         this.sunrise,
       this.sunset,

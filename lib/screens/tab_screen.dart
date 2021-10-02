@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/screens/home.dart';
 import 'package:weatherapp/screens/settings/cubit/settings_cubit.dart';
 import 'package:weatherapp/screens/settings/widgets/settings.dart';
-import 'package:weatherapp/shared/cubit/cubit/weather_cubit.dart';
+import 'package:weatherapp/shared/cubit/weather/weather_cubit.dart';
 import 'package:weatherapp/shared/widgets/shared/gradient_scaffold.dart';
 
 class TabsScreen extends StatefulWidget {

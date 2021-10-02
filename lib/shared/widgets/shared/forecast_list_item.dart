@@ -1,15 +1,22 @@
-
 import 'package:flutter/material.dart';
+import 'package:weatherapp/models/enums.dart';
+import 'package:weatherapp/models/weather_model.dart';
+import 'package:weatherapp/shared/widgets/shared/weather_image.dart';
+import 'package:weatherapp/utls/date_time.dart';
 
 class ForecastListItem extends StatelessWidget {
-  const ForecastListItem({
+  final int index;
+  final WeatherModel weather;
+  const ForecastListItem(
+    this.index,
+    this.weather, {
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -21,34 +28,50 @@ class ForecastListItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Today',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Container(
-            child: Row(
-              children: [
-                Image.asset(
-                  'assets/images/Sunny.png',
-                  height: 40,
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Text(
-                    'L 65',
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(left: 10),
-                  child: Text(
-                    'H 65',
-                    style: Theme.of(context).textTheme.subtitle1,
-                  ),
-                )
-              ],
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                index == 0
+                    ? 'Today'
+                    : index == 1
+                        ? 'Tomorrow'
+                        : DateTimeUtils.convertUnixToWeekDay(
+                            weather.currentTime!),
+                style: Theme.of(context).textTheme.subtitle1,
+                textAlign: TextAlign.start,
+              ),
             ),
-          )
+          ),
+          Flexible(
+            flex: 1,
+            child: WeatherImageWidget(
+              iconCode: weather.iconCode,
+              imageHeight: 40,
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
+            child: FittedBox(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'L ${weather.tempMin!.truncate().toString()+UnitSign[weather.units!.index]!}',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    'H ${weather.tempMax!.truncate().toString()+UnitSign[weather.units!.index]!}',
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

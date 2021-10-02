@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:weatherapp/screens/home/weekly_forecast/weekly_forecast.dart';
 import 'package:weatherapp/shared/widgets/header.dart';
-import 'package:weatherapp/shared/widgets/shared/forecast_list_item.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -8,7 +8,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(slivers: [
-      SliverPersistentHeader(
+      const SliverPersistentHeader(
         delegate: HeaderWidget(),
         pinned: true,
       ),
@@ -16,24 +16,15 @@ class HomeScreen extends StatelessWidget {
           delegate: SliverChildListDelegate([
         Container(
           clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.symmetric(horizontal: 22, vertical: 5),
+          margin: const EdgeInsets.symmetric(horizontal: 22, vertical: 5),
           width: double.infinity,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(15),
             ),
             color: Theme.of(context).cardColor,
           ),
-          child: Column(
-            children: [
-              ForecastListItem(),
-              ForecastListItem(),
-              ForecastListItem(),
-              ForecastListItem(),
-              ForecastListItem(),
-        
-            ],
-          ),
+          child: const WeeklyForecast(),
         )
       ]))
     ]);

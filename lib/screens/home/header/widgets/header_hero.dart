@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:weatherapp/models/enums.dart';
 import 'package:weatherapp/models/weather_model.dart';
 import 'package:weatherapp/screens/choose_location/widgets/choose_location.dart';
 import 'package:weatherapp/services/weather_service.dart';
-import 'package:weatherapp/shared/cubit/cubit/weather_cubit.dart';
+import 'package:weatherapp/shared/cubit/weather/weather_cubit.dart';
 import 'package:weatherapp/shared/widgets/shared/weather_image.dart';
 import 'package:weatherapp/utls/date_time.dart';
 
@@ -115,14 +116,14 @@ class HeaderHeroWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        FittedBox(
+        Flexible(
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(weather.location?.name ?? '-', style: Theme.of(context).textTheme.headline6),
               Container(
-                margin: EdgeInsets.only(left: 10),
+                margin: const EdgeInsets.only(left: 10),
                 padding: const EdgeInsets.all(0.1),
                 decoration: BoxDecoration(
                     color: Theme.of(context).primaryColorDark,
@@ -147,7 +148,7 @@ class HeaderHeroWidget extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10),
-                child: Text((weather.temperature?.toStringAsFixed(2) ?? '-')  + '\u00B0' + 'C',
+                child: Text((weather.temperature?.toStringAsFixed(2) ?? '-')  + UnitSign[weather.units!.index]!,
                     style: Theme.of(context).textTheme.headline1),
               )
             ],
