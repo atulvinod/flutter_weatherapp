@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/screens/choose_location/widgets/choose_location.dart';
-import 'package:weatherapp/screens/settings.dart';
+import 'package:weatherapp/screens/settings/cubit/settings_cubit.dart';
+import 'package:weatherapp/screens/settings/widgets/settings.dart';
 import 'package:weatherapp/screens/tab_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-    static const String APIKEY = 'cdafe644081dad824933fbac2b6dc013';
+  static const String APIKEY = 'cdafe644081dad824933fbac2b6dc013';
 
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (_) => SettingsCubit())],
+      child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           brightness: Brightness.light,
@@ -57,6 +61,7 @@ class MyApp extends StatelessWidget {
           ChooseLocationScreen.routeName: (context) => ChooseLocationScreen(),
           SettingsScreen.routeName: (context) => const SettingsScreen()
         },
-      );
+      ),
+    );
   }
 }

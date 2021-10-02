@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:weatherapp/models/location_model.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/screens/choose_location/cubit/choose_location_cubit.dart';
-import 'package:weatherapp/widgets/shared/gradient_scaffold.dart';
-import 'package:weatherapp/widgets/locations_list_item.dart';
+import 'package:weatherapp/screens/settings/cubit/settings_cubit.dart';
+import 'package:weatherapp/shared/widgets/locations_list_item.dart';
+import 'package:weatherapp/shared/widgets/shared/gradient_scaffold.dart';
 
 class ChooseLocationScreen extends StatefulWidget {
   static const routeName = '/choose-name';
@@ -21,31 +23,14 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
 
   final textController = TextEditingController();
 
-  late final AnimationController _controller;
-  late final Animation<Offset> _offsetAnimation;
-
   @override
   void initState() {
-    _controller = AnimationController(
-      duration: const Duration(seconds: 1),
-      vsync: this,
-    );
-
-    _offsetAnimation = Tween<Offset>(
-      end: const Offset(0.0, 0.0),
-      begin: const Offset(0.0, 0.25),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeIn,
-    ));
-    _controller.forward();
     super.initState();
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
   }
 
   @override
@@ -111,97 +96,122 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
                 height: 10,
               ),
               BlocBuilder<ChooseLocationCubit, ChooseLocationState>(
-                builder: (context, state) {
-                  if (state is LocationsInitial) {
-                    return Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      child: RichText(
-                        text: TextSpan(
-                          style: Theme.of(context).textTheme.subtitle2,
-                          children: [
-                            const TextSpan(text: 'Click '),
-                            WidgetSpan(
-                              alignment: PlaceholderAlignment.middle,
-                              child: Container(
-                                padding: const EdgeInsets.all(0.1),
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).primaryColorDark,
-                                    borderRadius: BorderRadius.circular(100)),
-                                child: IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.share_location,
-                                      size: 20,
-                                    )),
-                              ),
-                            ),
-                            const TextSpan(
-                              text: " to detect location",
-                            ),
-                          ],
+                  builder: (context, state) => Expanded(
+                        child: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 250),
+                          child: _buildBody(context, state),
                         ),
-                      ),
-                    );
-                  } else if (state is LocationsLoaded) {
-                    Expanded(
-                      child: SlideTransition(
-                        position: _offsetAnimation,
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                clipBehavior: Clip.antiAliasWithSaveLayer,
-                                margin: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: Theme.of(context).cardColor,
-                                ),
-                                child: ListView.builder(
-                                  itemCount: state.locations.length,
-                                  itemBuilder: (context, index) =>
-                                      LocationListItem(
-                                    state.locations[index],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                // _provider.clearLocations();
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.all(20),
-                                padding: const EdgeInsets.all(20),
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(10)),
-                                  color: Theme.of(context).primaryColorLight,
-                                ),
-                                child: Text(
-                                  'Clear search',
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .subtitle2!
-                                      .copyWith(color: Colors.red),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-                  }
-
-                  return Container();
-                },
-              )
+                      ))
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildBody(BuildContext context, ChooseLocationState state) {
+    if (state is LocationsInitial ||
+        state is LocationNotFound ||
+        (state is LocationsLoaded && state.locations.isEmpty)) {
+      return Container(
+        margin: const EdgeInsets.only(top: 10),
+        child: (state is LocationsInitial)
+            ? RichText(
+                text: TextSpan(
+                  style: Theme.of(context).textTheme.subtitle2,
+                  children: [
+                    const TextSpan(text: 'Click '),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: Container(
+                        padding: const EdgeInsets.all(0.1),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColorDark,
+                            borderRadius: BorderRadius.circular(100)),
+                        child: IconButton(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.share_location,
+                              size: 20,
+                            )),
+                      ),
+                    ),
+                    const TextSpan(
+                      text: " to detect location",
+                    ),
+                  ],
+                ),
+              )
+            : Text('Location not found!, please try again',
+                style: Theme.of(context).textTheme.headline5),
+      );
+    } else if (state is LocationsLoaded) {
+      return Column(
+        children: [
+          Expanded(
+            child: Container(
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              margin: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Theme.of(context).cardColor,
+              ),
+              child: ListView.builder(
+                itemCount: state.locations.length,
+                itemBuilder: (_, index) => LocationListItem(
+                  state.locations[index],
+                  onClick: () => BlocProvider.of<SettingsCubit>(context).setUserLocation(state.locations[index].lat!, state.locations[index].lon!).then((value) => Navigator.of(context).pop()),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          GestureDetector(
+            onTap: () {
+              textController.text = '';
+              BlocProvider.of<ChooseLocationCubit>(context).emit(LocationsInitial());
+            },
+            child: Container(
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                color: Theme.of(context).primaryColorLight,
+              ),
+              child: Text(
+                'Clear search',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2!
+                    .copyWith(color: Colors.red),
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      margin: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Shimmer.fromColors(
+        baseColor: Theme.of(context).primaryColorLight,
+        highlightColor: Theme.of(context).primaryColorDark,
+        child: const Center(
+          child: Text(
+            'Loading',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 40.0,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),

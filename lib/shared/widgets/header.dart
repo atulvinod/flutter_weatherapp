@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/widgets/header_hero.dart';
-import 'package:weatherapp/widgets/weather_pill.dart';
+import 'package:weatherapp/screens/home/header/widgets/header_hero.dart';
+import 'package:weatherapp/screens/home/header/widgets/hourly_weather_list.dart';
 
 class HeaderWidget extends SliverPersistentHeaderDelegate {
   const HeaderWidget({Key? key});
@@ -38,19 +38,7 @@ class HeaderWidget extends SliverPersistentHeaderDelegate {
               margin: EdgeInsets.symmetric(horizontal: 22, vertical: 5),
               child: Opacity(
                 opacity: opacity.toDouble(),
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                    WeatherPillWidget(),
-                  ],
-                ),
+                child: HourlyWeatherList(),
               ),
             ),
           ),

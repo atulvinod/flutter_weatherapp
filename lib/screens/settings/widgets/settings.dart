@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/widgets/shared/gradient_scaffold.dart';
+import 'package:weatherapp/shared/widgets/shared/gradient_scaffold.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String routeName = '/settings';

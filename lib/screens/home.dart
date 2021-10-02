@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/widgets/shared/forecast_list_item.dart';
-import 'package:weatherapp/widgets/header.dart';
-import 'package:weatherapp/widgets/weather_pill.dart';
+import 'package:weatherapp/shared/widgets/header.dart';
+import 'package:weatherapp/shared/widgets/shared/forecast_list_item.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);

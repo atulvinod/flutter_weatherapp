@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:weatherapp/widgets/shared/weather_image.dart';
+import 'package:weatherapp/shared/widgets/shared/weather_image.dart';
 
 class WeatherPillWidget extends StatelessWidget {
   const WeatherPillWidget({
