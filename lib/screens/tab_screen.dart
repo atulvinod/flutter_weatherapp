@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weatherapp/screens/home.dart';
 import 'package:weatherapp/screens/settings.dart';
-import 'package:weatherapp/widgets/gradient_scaffold.dart';
+import 'package:weatherapp/widgets/shared/gradient_scaffold.dart';
 
 class TabsScreen extends StatefulWidget {
   static const String routeName = '/tabs-screen';

@@ -3,13 +3,18 @@ import 'package:weatherapp/models/location_model.dart';
 
 class LocationListItem extends StatelessWidget {
   final LocationModel location;
-  const LocationListItem(this.location, {Key? key}) : super(key: key);
+  final Function? onClick;
+  const LocationListItem(this.location, {Key? key, this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          if(onClick!= null){
+            onClick!();
+          }
+        },
         child: Container(
           alignment: AlignmentDirectional.centerStart,
           padding: const EdgeInsets.all(10),

@@ -1,0 +1,210 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:weatherapp/models/location_model.dart';
+import 'package:weatherapp/screens/choose_location/cubit/choose_location_cubit.dart';
+import 'package:weatherapp/widgets/shared/gradient_scaffold.dart';
+import 'package:weatherapp/widgets/locations_list_item.dart';
+
+class ChooseLocationScreen extends StatefulWidget {
+  static const routeName = '/choose-name';
+
+  const ChooseLocationScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ChooseLocationScreen> createState() => _ChooseLocationScreenState();
+}
+
+class _ChooseLocationScreenState extends State<ChooseLocationScreen>
+    with TickerProviderStateMixin {
+  final formKey = GlobalKey<FormState>();
+
+  final textController = TextEditingController();
+
+  late final AnimationController _controller;
+  late final Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(seconds: 1),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      end: const Offset(0.0, 0.0),
+      begin: const Offset(0.0, 0.25),
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    ));
+    _controller.forward();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColorLight,
+        shadowColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
+      body: BlocProvider(
+        create: (context) => ChooseLocationCubit(),
+        child: GradientScaffoldBody(
+          Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColorDark,
+                    borderRadius: BorderRadius.circular(20)),
+                padding: const EdgeInsets.all(20),
+                child: BlocBuilder<ChooseLocationCubit, ChooseLocationState>(
+                  builder: (context, state) {
+                    return Form(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width - 132,
+                            child: TextFormField(
+                              controller: textController,
+                              textInputAction: TextInputAction.search,
+                              decoration: const InputDecoration(
+                                  hintText: 'Type to search location'),
+                              onFieldSubmitted: (value) {
+                                BlocProvider.of<ChooseLocationCubit>(context)
+                                    .findLocations(value);
+                              },
+                              onChanged: (value) {
+                                if (value.isEmpty) setState(() {});
+                              },
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                BlocProvider.of<ChooseLocationCubit>(context)
+                                    .findCurrentLocation();
+                              },
+                              icon: const Icon(Icons.share_location)),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              BlocBuilder<ChooseLocationCubit, ChooseLocationState>(
+                builder: (context, state) {
+                  if (state is LocationsInitial) {
+                    return Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.subtitle2,
+                          children: [
+                            const TextSpan(text: 'Click '),
+                            WidgetSpan(
+                              alignment: PlaceholderAlignment.middle,
+                              child: Container(
+                                padding: const EdgeInsets.all(0.1),
+                                decoration: BoxDecoration(
+                                    color: Theme.of(context).primaryColorDark,
+                                    borderRadius: BorderRadius.circular(100)),
+                                child: IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.share_location,
+                                      size: 20,
+                                    )),
+                              ),
+                            ),
+                            const TextSpan(
+                              text: " to detect location",
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  } else if (state is LocationsLoaded) {
+                    Expanded(
+                      child: SlideTransition(
+                        position: _offsetAnimation,
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                clipBehavior: Clip.antiAliasWithSaveLayer,
+                                margin: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Theme.of(context).cardColor,
+                                ),
+                                child: ListView.builder(
+                                  itemCount: state.locations.length,
+                                  itemBuilder: (context, index) =>
+                                      LocationListItem(
+                                    state.locations[index],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // _provider.clearLocations();
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.all(20),
+                                padding: const EdgeInsets.all(20),
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(10)),
+                                  color: Theme.of(context).primaryColorLight,
+                                ),
+                                child: Text(
+                                  'Clear search',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .subtitle2!
+                                      .copyWith(color: Colors.red),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  return Container();
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

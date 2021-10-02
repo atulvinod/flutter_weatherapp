@@ -1,36 +1,30 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:weatherapp/main.dart';
 import 'package:weatherapp/models/location_model.dart';
+import 'package:weatherapp/models/weather_model.dart';
 
 class WeatherService {
-  final String _APIKEY = 'cdafe644081dad824933fbac2b6dc013';
-  final int _limit = 10; 
-  Future<List<LocationModel>> findLocationViaName(String query) async{
-    List<LocationModel> locations = [];
-    var response = await http.get(Uri.parse('http://api.openweathermap.org/geo/1.0/direct?q=$query&limit=$_limit&appid=$_APIKEY'));
-    if(response.statusCode == 200){
-    var values = (jsonDecode(response.body) as List<dynamic>).map((e) => LocationModel(name: e['name'],country: e['country'],lon: e['lon'],lat: e['lat'],state: e['state']));
-    locations = values.toList();
-    }
-    return locations;
-  }
-
-    Future<List<LocationModel>> findLocationViaCoordinates(double lat , double lon) async{
-    List<LocationModel> locations = [];
-    var response = await http.get(Uri.parse('http://api.openweathermap.org/geo/1.0/reverse?lat=$lat&lon=$lon&limit=$_limit&appid=$_APIKEY'));
-    if(response.statusCode == 200){
-    var values = (jsonDecode(response.body) as List<dynamic>).map((e) => LocationModel(name: e['name'],country: e['country'],lon: e['lon'],lat: e['lat'],state: e['state']));
-    locations = values.toList();
-    }
-    return locations;
-  }
-
-  Future<void> getCurrentWeatherStatus() async{
-
-  }
-
-  Future<void> getWeeklyForecast() async {
-
+  Future<WeatherModel> getCurrentWeather(double lat, double lon) async {
+    var response = await http.get(Uri.parse(
+        'http://api.openweathermap.org/data/2.5/weather?units=metric&lat=$lat&lon=$lon&appid=${MyApp.APIKEY}'));
+    var responseBody = jsonDecode(response.body);
+    WeatherModel result = WeatherModel(
+        weatherDescription: responseBody['weather'][0]['description'],
+        iconCode: responseBody['weather'][0]['icon'],
+        feelsLike: responseBody['main']['feels_like'],
+        tempMax: responseBody['main']['temp_max'],
+        tempMin: responseBody['main']['temp_min'],
+        temperature: responseBody['main']['temp'],
+        humidity: responseBody['main']['humidity'],
+        pressure: responseBody['main']['pressure'],
+        sunrise: responseBody['sys']['sunrise'],
+        sunset: responseBody['sys']['sunset'],
+        location: LocationModel(
+          name: responseBody['name'],
+          country: responseBody['sys']['country'],
+        ));
+    return result;
   }
 }

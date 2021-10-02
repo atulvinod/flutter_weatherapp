@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:weatherapp/providers/location_provider.dart';
-import 'package:weatherapp/screens/choose_location.dart';
+import 'package:weatherapp/screens/choose_location/widgets/choose_location.dart';
 import 'package:weatherapp/screens/settings.dart';
 import 'package:weatherapp/screens/tab_screen.dart';
 
@@ -15,16 +13,14 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+    static const String APIKEY = 'cdafe644081dad824933fbac2b6dc013';
+
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(value: LocationProvider()),
-      ],
-      child: MaterialApp(
+    return  MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           brightness: Brightness.light,
@@ -61,7 +57,6 @@ class MyApp extends StatelessWidget {
           ChooseLocationScreen.routeName: (context) => ChooseLocationScreen(),
           SettingsScreen.routeName: (context) => const SettingsScreen()
         },
-      ),
-    );
+      );
   }
 }

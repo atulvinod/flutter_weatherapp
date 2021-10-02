@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:weatherapp/widgets/forecast_list_item.dart';
+import 'package:weatherapp/widgets/shared/forecast_list_item.dart';
 import 'package:weatherapp/widgets/header.dart';
 import 'package:weatherapp/widgets/weather_pill.dart';
 
