@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:weatherapp/models/location_model.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:weatherapp/screens/choose_location/cubit/choose_location_cubit.dart';
 import 'package:weatherapp/screens/settings/cubit/settings_cubit.dart';
@@ -142,8 +140,11 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
                   ],
                 ),
               )
-            : Text('Location not found!, please try again',
-                style: Theme.of(context).textTheme.headline5),
+            : (state is LocationPermissionDenied)
+                ? Text('Please turn on Locations and grant access',
+                    style: Theme.of(context).textTheme.headline5)
+                : Text('Location not found!, please try again',
+                    style: Theme.of(context).textTheme.headline5),
       );
     } else if (state is LocationsLoaded) {
       return Column(
@@ -160,7 +161,10 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
                 itemCount: state.locations.length,
                 itemBuilder: (_, index) => LocationListItem(
                   state.locations[index],
-                  onClick: () => BlocProvider.of<SettingsCubit>(context).setUserLocation(state.locations[index].lat!, state.locations[index].lon!).then((value) => Navigator.of(context).pop()),
+                  onClick: () => BlocProvider.of<SettingsCubit>(context)
+                      .setUserLocation(state.locations[index].lat!,
+                          state.locations[index].lon!)
+                      .then((value) => Navigator.of(context).pop()),
                 ),
               ),
             ),
@@ -171,7 +175,8 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
           GestureDetector(
             onTap: () {
               textController.text = '';
-              BlocProvider.of<ChooseLocationCubit>(context).emit(LocationsInitial());
+              BlocProvider.of<ChooseLocationCubit>(context)
+                  .emit(LocationsInitial());
             },
             child: Container(
               margin: const EdgeInsets.all(20),

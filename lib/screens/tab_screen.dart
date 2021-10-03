@@ -15,7 +15,7 @@ class TabsScreen extends StatefulWidget {
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  List<Map<String, Widget>> _pages = [
+  final List<Map<String, Widget>> _pages = [
     {
       'page': HomeScreen(),
     },
@@ -49,8 +49,7 @@ class _TabsScreenState extends State<TabsScreen> {
           currentIndex: _selectedPageIndex,
           onTap: _selectPage,
           items: [
-            BottomNavigationBarItem(
-                icon: const Icon(Icons.wb_sunny), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Home'),
             BottomNavigationBarItem(
                 icon: Icon(Icons.settings), label: 'Settings')
           ],
@@ -58,10 +57,8 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   _buildLoadingScreen(BuildContext context) {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 

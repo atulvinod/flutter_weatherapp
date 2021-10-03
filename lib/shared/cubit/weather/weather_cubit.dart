@@ -45,19 +45,12 @@ class WeatherCubit extends Cubit<WeatherState> {
         .map(
           (z) => WeatherModel(
               units: unit ?? settings.unit,
-              temperature:
-                  z['temp'] is int ? (z['temp'] as int).toDouble() : z['temp'],
-              feelsLike: z['feels_like'] is int
-                  ? (z['feels_like'] as int).toDouble()
-                  : z['feels_like'],
+              temperature: _parseNumberToDouble(z['temp']),
+              feelsLike: _parseNumberToDouble(z['Feels_like']),
               currentTime: z['dt'],
               pressure: z['pressure'],
-              tempMax: z['temp_max'] is int
-                  ? (z['temp_max'] as int).toDouble()
-                  : z['temp_max'],
-              tempMin: z['temp_min'] is int
-                  ? (z['temp_min'] as int).toDouble()
-                  : z['temp_min'],
+              tempMax: _parseNumberToDouble(z['temp_max']),
+              tempMin: _parseNumberToDouble(z['temp_min']),
               weatherDescription: z['weather'][0]['description'],
               iconCode: z['weather'][0]['icon'],
               humidity: z['humidity']),
@@ -71,12 +64,8 @@ class WeatherCubit extends Cubit<WeatherState> {
               temperature: z['temp']['day'],
               feelsLike: z['feels_like']['day'],
               pressure: z['pressure'],
-              tempMax: z['temp']['max'] is int
-                  ? (z['temp']['max'] as int).toDouble()
-                  : z['temp']['max'],
-              tempMin: z['temp']['min'] is int
-                  ? (z['temp']['min'] as int).toDouble()
-                  : z['temp']['min'],
+              tempMax: _parseNumberToDouble(z['temp']['max']),
+              tempMin: _parseNumberToDouble(z['temp']['min']),
               weatherDescription: z['weather'][0]['description'],
               iconCode: z['weather'][0]['icon'],
               humidity: z['humidity'],
@@ -85,5 +74,9 @@ class WeatherCubit extends Cubit<WeatherState> {
         )
         .toList();
     emit(WeatherLoaded(currentWeather, hourly, daily, unit ?? settings.unit));
+  }
+
+  _parseNumberToDouble(dynamic value) {
+    return value is int ? (value as int).toDouble() : value;
   }
 }

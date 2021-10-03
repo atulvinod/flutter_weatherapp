@@ -1,8 +1,8 @@
 part of 'choose_location_cubit.dart';
 
-abstract class ChooseLocationState extends Equatable{}
+abstract class ChooseLocationState extends Equatable {}
 
-class LocationsLoaded extends ChooseLocationState{
+class LocationsLoaded extends ChooseLocationState {
   final List<LocationModel> locations;
 
   LocationsLoaded(this.locations);
@@ -17,11 +17,16 @@ class LocationsLoading extends ChooseLocationState {
 }
 
 class LocationsInitial extends ChooseLocationState {
-    @override
+  @override
   List<Object?> get props => [];
 }
 
-class LocationNotFound extends ChooseLocationState{
-   @override
+class LocationNotFound extends ChooseLocationState {
+  @override
+  List<Object?> get props => [];
+}
+
+class LocationPermissionDenied extends ChooseLocationState {
+  @override
   List<Object?> get props => [];
 }

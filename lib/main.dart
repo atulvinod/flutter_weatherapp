@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => WeatherCubit(settingsCubit))
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Material Weather',
         theme: ThemeData(
           brightness: Brightness.light,
           fontFamily: 'WorkSans',
