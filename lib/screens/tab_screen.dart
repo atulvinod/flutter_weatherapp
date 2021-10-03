@@ -35,13 +35,14 @@ class _TabsScreenState extends State<TabsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _context) {
     return Scaffold(
         body: BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
             return GradientScaffoldBody(state is SettingsLoading
                 ? _buildLoadingScreen(context)
-                : _buildMainScreen(context,_pages[_selectedPageIndex]['page']!));
+                : _buildMainScreen(
+                    _context, _pages[_selectedPageIndex]['page']!));
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -58,7 +59,9 @@ class _TabsScreenState extends State<TabsScreen> {
 
   _buildLoadingScreen(BuildContext context) {
     return Container(
-      child: Text('hello'),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
@@ -66,15 +69,14 @@ class _TabsScreenState extends State<TabsScreen> {
   _buildMainScreen(BuildContext context, Widget selectedPage) {
     cubit = cubit ?? WeatherCubit(BlocProvider.of<SettingsCubit>(context));
     return BlocProvider<WeatherCubit>(
-      create: (context) => cubit!,
-      child: BlocBuilder<WeatherCubit, WeatherState>(
-        builder: (context, state) {
-          if(state is WeatherInitial){
-            BlocProvider.of<WeatherCubit>(context).getWeatherData();
-          } 
-          return selectedPage;
-        },
-      )
-      );
+        create: (context) => cubit!,
+        child: BlocBuilder<WeatherCubit, WeatherState>(
+          builder: (context, state) {
+            if (state is WeatherInitial) {
+              BlocProvider.of<WeatherCubit>(context).getWeatherData();
+            }
+            return selectedPage;
+          },
+        ));
   }
 }

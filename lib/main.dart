@@ -58,7 +58,8 @@ class MyApp extends StatelessWidget {
         initialRoute: TabsScreen.routeName,
         routes: {
           TabsScreen.routeName: (context) => const TabsScreen(),
-          ChooseLocationScreen.routeName: (context) => ChooseLocationScreen(),
+          ChooseLocationScreen.routeName: (context) =>
+              const ChooseLocationScreen(),
           SettingsScreen.routeName: (context) => const SettingsScreen()
         },
       ),

@@ -10,7 +10,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     getUserSettings();
   }
 
-  getUserSettings() async {
+  Future<SettingsModel> getUserSettings() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var savedUnits = prefs.getInt('units') ?? 0;
     var currentLat = prefs.getDouble('currentLat') ?? 28.7041;
@@ -19,6 +19,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         Units.values.firstWhere((element) => element.index == savedUnits);
     var settings = SettingsModel(unit, currentLat, currentLong);
     emit(SettingsLoaded(settings));
+    return settings;
   }
 
   setUserSettings(SettingsModel settings) async {
@@ -26,11 +27,10 @@ class SettingsCubit extends Cubit<SettingsState> {
     prefs.setInt('units', settings.unit.index);
     prefs.setDouble('currentLong', settings.currentLong);
     prefs.setDouble('currentLat', settings.currentLat);
-    ;
     emit(SettingsLoaded(settings));
   }
 
-  Future<void >setUserLocation(double lat, double lon) async {
+  Future<void> setUserLocation(double lat, double lon) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var savedUnits = prefs.getInt('units') ?? 0;
