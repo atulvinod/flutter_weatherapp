@@ -110,9 +110,10 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
   _buildBody(BuildContext context, ChooseLocationState state) {
     if (state is LocationsInitial ||
         state is LocationNotFound ||
+        state is LocationPermissionDenied ||
         (state is LocationsLoaded && state.locations.isEmpty)) {
       return Container(
-        margin: const EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 22),
         child: (state is LocationsInitial)
             ? RichText(
                 text: TextSpan(
@@ -141,7 +142,7 @@ class _ChooseLocationScreenState extends State<ChooseLocationScreen>
                 ),
               )
             : (state is LocationPermissionDenied)
-                ? Text('Please turn on Locations and grant access',
+                ? Text('Please turn on Location and grant access',
                     style: Theme.of(context).textTheme.headline5)
                 : Text('Location not found!, please try again',
                     style: Theme.of(context).textTheme.headline5),

@@ -21,13 +21,6 @@ class ChooseLocationCubit extends Cubit<ChooseLocationState> {
   }
 
   Future<void> findCurrentLocation() async {
-    // emit(LocationsLoading());
-    // var locations = await _locationService.getSelfLocation();
-    // if(locations == null){
-    //   emit(LocationNotFound());
-    // }else{
-    //   emit(LocationsLoaded(locations));
-    // }
     Location location = Location();
     var serviceEnabled = await location.serviceEnabled();
     if (!serviceEnabled) {

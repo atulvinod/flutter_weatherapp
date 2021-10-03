@@ -18,27 +18,25 @@ class HeaderHeroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        height: 210,
-        width: double.infinity,
-        margin: const EdgeInsets.all(22),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          color: Theme.of(context).cardColor,
-        ),
-        child: BlocBuilder<WeatherCubit, WeatherState>(
-          builder: (context, state){
-            if (state is WeatherLoaded) {
-              return 
-              _getMainBody(context, state.currentWeather);
-            }
-            return _getLoadingShimmer(context);
-          },
-        ),
-      );
-  
+    return Container(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      height: 210,
+      width: double.infinity,
+      margin: const EdgeInsets.all(22),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        color: Theme.of(context).cardColor,
+      ),
+      child: BlocBuilder<WeatherCubit, WeatherState>(
+        builder: (context, state) {
+          if (state is WeatherLoaded) {
+            return _getMainBody(context, state.currentWeather);
+          }
+          return _getLoadingShimmer(context);
+        },
+      ),
+    );
   }
 
   _getLoadingShimmer(BuildContext context) {
@@ -116,28 +114,29 @@ class HeaderHeroWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Flexible(
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(weather.location?.name ?? '-', style: Theme.of(context).textTheme.headline6),
-              Container(
-                margin: const EdgeInsets.only(left: 10),
-                padding: const EdgeInsets.all(0.1),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColorDark,
-                    borderRadius: BorderRadius.circular(100)),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(ChooseLocationScreen.routeName);
-                  },
-                  icon: const Icon(Icons.gps_fixed),
-                ),
+        Row(
+          children: [
+            Flexible(
+              child: FittedBox(
+                child: Text(weather.location?.name ?? '-',
+                    style: Theme.of(context).textTheme.headline6),
               ),
-            ],
-          ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.all(0.1),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColorDark,
+                  borderRadius: BorderRadius.circular(100)),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context)
+                      .pushNamed(ChooseLocationScreen.routeName);
+                },
+                icon: const Icon(Icons.gps_fixed),
+              ),
+            ),
+          ],
         ),
         FittedBox(
           child: Row(
@@ -148,7 +147,9 @@ class HeaderHeroWidget extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(left: 10),
-                child: Text((weather.temperature?.toStringAsFixed(2) ?? '-')  + UnitSign[weather.units!.index]!,
+                child: Text(
+                    (weather.temperature?.toStringAsFixed(2) ?? '-') +
+                        UnitSign[weather.units!.index]!,
                     style: Theme.of(context).textTheme.headline1),
               )
             ],
@@ -158,10 +159,11 @@ class HeaderHeroWidget extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                'Feels like ${weather.feelsLike?.toStringAsFixed(2) ?? '0' } | ',
+                'Feels like ${weather.feelsLike?.toStringAsFixed(2) ?? '0'} | ',
                 style: Theme.of(context).textTheme.subtitle1,
               ),
-              Text('Sunset at ${DateTimeUtils.convertUnixToLocal(weather.sunset!)}',
+              Text(
+                  'Sunset at ${DateTimeUtils.convertUnixToLocal(weather.sunset!)}',
                   style: Theme.of(context).textTheme.subtitle1)
             ],
           ),
