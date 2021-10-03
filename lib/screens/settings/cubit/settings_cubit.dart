@@ -27,7 +27,8 @@ class SettingsCubit extends Cubit<SettingsState> {
     prefs.setInt('units', settings.unit.index);
     prefs.setDouble('currentLong', settings.currentLong);
     prefs.setDouble('currentLat', settings.currentLat);
-    emit(SettingsLoaded(settings));
+    emit(SettingsLoaded(SettingsModel(
+        settings.unit, settings.currentLat, settings.currentLong)));
   }
 
   Future<void> setUserLocation(double lat, double lon) async {

@@ -5,25 +5,29 @@ import 'package:weatherapp/screens/choose_location/widgets/choose_location.dart'
 import 'package:weatherapp/screens/settings/cubit/settings_cubit.dart';
 import 'package:weatherapp/screens/settings/widgets/settings.dart';
 import 'package:weatherapp/screens/tab_screen.dart';
+import 'package:weatherapp/shared/cubit/weather/weather_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   static const String APIKEY = 'cdafe644081dad824933fbac2b6dc013';
-
-  const MyApp({Key? key}) : super(key: key);
+  final SettingsCubit settingsCubit = SettingsCubit();
+  MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => SettingsCubit())],
+      providers: [
+        BlocProvider(create: (_) => settingsCubit),
+        BlocProvider(create: (_) => WeatherCubit(settingsCubit))
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

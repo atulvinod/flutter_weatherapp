@@ -65,18 +65,14 @@ class _TabsScreenState extends State<TabsScreen> {
     );
   }
 
-  WeatherCubit? cubit;
   _buildMainScreen(BuildContext context, Widget selectedPage) {
-    cubit = cubit ?? WeatherCubit(BlocProvider.of<SettingsCubit>(context));
-    return BlocProvider<WeatherCubit>(
-        create: (context) => cubit!,
-        child: BlocBuilder<WeatherCubit, WeatherState>(
-          builder: (context, state) {
-            if (state is WeatherInitial) {
-              BlocProvider.of<WeatherCubit>(context).getWeatherData();
-            }
-            return selectedPage;
-          },
-        ));
+    return BlocBuilder<WeatherCubit, WeatherState>(
+      builder: (context, state) {
+        if (state is WeatherInitial) {
+          BlocProvider.of<WeatherCubit>(context).getWeatherData();
+        }
+        return selectedPage;
+      },
+    );
   }
 }

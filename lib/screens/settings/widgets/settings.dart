@@ -83,7 +83,7 @@ class SettingsFormBloc extends FormBloc<String, String> {
   SettingsFormBloc(this.settings) {
     settingsModel = (settings.state as SettingsLoaded).settings;
     units
-      ..updateItems(Units.values)
+      ..updateItems(Units.values.toList())
       ..updateInitialValue(settingsModel.unit);
     units.onValueChanges(onData: (prevState, currState) async* {
       if (prevState.value == null) return;
@@ -95,7 +95,7 @@ class SettingsFormBloc extends FormBloc<String, String> {
   @override
   void onSubmitting() {
     var unitsValue = units.value;
-    settingsModel.copyWith(unit: unitsValue);
+    settingsModel = settingsModel.copyWith(unit: unitsValue);
     settings.setUserSettings(settingsModel);
     emitSuccess(successResponse: 'Settings Updated');
   }
