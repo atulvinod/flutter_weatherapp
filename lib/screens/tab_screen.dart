@@ -17,9 +17,9 @@ class TabsScreen extends StatefulWidget {
 class _TabsScreenState extends State<TabsScreen> {
   final List<Map<String, Widget>> _pages = [
     {
-      'page': HomeScreen(),
+      'page': const HomeScreen(),
     },
-    {'page': SettingsScreen()}
+    {'page': const SettingsScreen()}
   ];
   int _selectedPageIndex = 0;
 
@@ -39,20 +39,13 @@ class _TabsScreenState extends State<TabsScreen> {
     return Scaffold(
         body: BlocBuilder<SettingsCubit, SettingsState>(
           builder: (context, state) {
-            return GradientScaffoldBody(state is SettingsLoading
-                ? _buildLoadingScreen(context)
-                : _buildMainScreen(
-                    _context, _pages[_selectedPageIndex]['page']!));
+            return GradientScaffoldBody(state is SettingsLoading ? _buildLoadingScreen(context) : _buildMainScreen(_context, _pages[_selectedPageIndex]['page']!));
           },
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedPageIndex,
           onTap: _selectPage,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Home'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: 'Settings')
-          ],
+          items: [BottomNavigationBarItem(icon: Icon(Icons.wb_sunny), label: 'Home'), BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings')],
         ));
   }
 
@@ -62,14 +55,53 @@ class _TabsScreenState extends State<TabsScreen> {
     );
   }
 
-  _buildMainScreen(BuildContext context, Widget selectedPage) {
+  _buildMainScreen(BuildContext _context, Widget selectedPage) {
     return BlocBuilder<WeatherCubit, WeatherState>(
       builder: (context, state) {
         if (state is WeatherInitial) {
           BlocProvider.of<WeatherCubit>(context).getWeatherData();
+        } else if (state is WeatherLoadError) {
+          return _errorPage(context);
         }
         return selectedPage;
       },
+    );
+  }
+
+  Container _errorPage(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage('assets/images/RainThunder.png')),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(15),
+        ),
+        color: Theme.of(context).cardColor,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'An unexpected error occured while getting weather',
+            maxLines: 10,
+            overflow: TextOverflow.fade,
+            softWrap: true,
+            style: Theme.of(context).textTheme.headline5!.copyWith(color: Colors.red),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          ElevatedButton.icon(
+              onPressed: () {
+                BlocProvider.of<WeatherCubit>(context).getWeatherData();
+              },
+              icon: Icon(Icons.refresh),
+              label: Text(
+                'Retry',
+              ))
+        ],
+      ),
     );
   }
 }
