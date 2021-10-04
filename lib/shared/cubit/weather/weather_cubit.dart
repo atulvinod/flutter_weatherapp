@@ -28,7 +28,7 @@ class WeatherCubit extends Cubit<WeatherState> {
     var currentWeather = await weatherService.getCurrentWeather(lat ?? settings.currentLat, lon ?? settings.currentLong, unit: unit ?? settings.unit);
     var weatherData = await weatherService.getWeatherData(lat ?? settings.currentLat, lon ?? settings.currentLong, unit: unit ?? settings.unit);
     if (currentWeather != null && weatherData != null) {
-      emit(WeatherLoaded(currentWeather, weatherData!['hourly'], weatherData!['daily'], unit ?? settings.unit));
+      emit(WeatherLoaded(currentWeather, weatherData['hourly'], weatherData['daily'], unit ?? settings.unit));
     } else {
       emit(WeatherLoadError());
     }

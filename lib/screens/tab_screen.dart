@@ -70,10 +70,10 @@ class _TabsScreenState extends State<TabsScreen> {
 
   Container _errorPage(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(20),
-      padding: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        image: DecorationImage(image: AssetImage('assets/images/RainThunder.png')),
+        image: const DecorationImage(image: AssetImage('assets/images/RainThunder.png')),
         borderRadius: const BorderRadius.all(
           Radius.circular(15),
         ),
