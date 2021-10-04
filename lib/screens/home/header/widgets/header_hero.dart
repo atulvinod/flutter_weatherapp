@@ -115,6 +115,7 @@ class HeaderHeroWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
               child: FittedBox(
